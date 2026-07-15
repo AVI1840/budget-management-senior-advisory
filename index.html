@@ -1,0 +1,1066 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>מערכת ניהול תקציב - אגף ייעוץ לאזרח הוותיק ומשפחתו</title>
+<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700&family=Assistant:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+:root {
+  --color-primary-50: #f9fcff;
+  --color-primary-100: #f0f8ff;
+  --color-primary-200: #e8f3ff;
+  --color-primary-300: #b7d6ff;
+  --color-primary-400: #0068f5;
+  --color-primary-500: #0368b0;
+  --color-primary-600: #025a8f;
+  --color-primary-700: #012c4a;
+  --color-primary-800: #0c3058;
+  --color-primary-900: #030213;
+  --color-success: #367C39;
+  --color-success-light: #f5ffef;
+  --color-error: #c93435;
+  --color-error-light: #ffefef;
+  --color-warning-text: #BD4200;
+  --color-warning-bg: #FFF3E0;
+  --color-info: #0068f5;
+  --color-info-bg: #e3f2fd;
+  --color-bg-primary: #ffffff;
+  --color-bg-secondary: #F0F8FF;
+  --color-text-primary: #0c3058;
+  --color-text-secondary: #266794;
+  --color-text-inverse: #f5f9ff;
+  --color-text-link: #0068f5;
+  --color-border-primary: #b5c7e2;
+  --color-border-accent: #0068f5;
+  --gradient-header: linear-gradient(to left, #012c4a, #0368b0);
+  --font-family-primary: 'Rubik', 'Assistant', -apple-system, sans-serif;
+  --radius-sm: 4px;
+  --radius-base: 8px;
+  --radius-xl: 12px;
+  --radius-full: 100px;
+  --shadow-base: 0px 2px 8px rgba(6,77,173,0.1);
+  --shadow-md: 0px 4px 12px rgba(6,77,173,0.15);
+  --shadow-lg: 0px 10px 24px rgba(6,77,173,0.15);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--font-family-primary);
+  color: var(--color-text-primary);
+  background: var(--color-bg-secondary);
+  line-height: 1.6;
+  font-size: 16px;
+}
+
+a { color: var(--color-text-link); text-decoration: none; }
+a:hover { text-decoration: underline; }
+a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible {
+  outline: 2px solid var(--color-border-accent);
+  outline-offset: 2px;
+}
+
+.skip-link {
+  position: absolute; top: -100px; right: 0;
+  background: var(--color-primary-700); color: white;
+  padding: 8px 16px; z-index: 9999;
+}
+.skip-link:focus { top: 0; }
+
+header {
+  background: var(--gradient-header);
+  color: var(--color-text-inverse);
+  padding: 16px 24px;
+  position: sticky; top: 0; z-index: 100;
+  box-shadow: var(--shadow-md);
+}
+.header-inner {
+  max-width: 1344px; margin: 0 auto;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.header-logo { display: flex; align-items: center; gap: 12px; }
+.header-logo-icon {
+  width: 44px; height: 44px;
+  background: rgba(255,255,255,0.15);
+  border-radius: var(--radius-base);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px;
+}
+.header-title { font-size: 1.125rem; font-weight: 600; }
+.header-subtitle { font-size: 0.75rem; opacity: 0.8; }
+.header-date { font-size: 0.875rem; opacity: 0.9; }
+
+main { max-width: 1344px; margin: 0 auto; padding: 24px 16px 80px; }
+
+.tabs-nav {
+  display: flex; gap: 4px; overflow-x: auto;
+  background: var(--color-bg-primary);
+  border-radius: var(--radius-xl);
+  padding: 6px;
+  box-shadow: var(--shadow-base);
+  margin-bottom: 24px;
+}
+.tab-btn {
+  padding: 10px 16px; border: none; background: transparent;
+  border-radius: var(--radius-base);
+  font-family: inherit; font-size: 0.875rem; font-weight: 500;
+  color: var(--color-text-secondary);
+  cursor: pointer; white-space: nowrap;
+  min-height: 44px;
+  display: flex; align-items: center; gap: 6px;
+  transition: all 0.2s;
+}
+.tab-btn:hover { background: var(--color-bg-secondary); }
+.tab-btn.active {
+  background: var(--color-primary-500); color: white;
+  box-shadow: var(--shadow-base);
+}
+.tab-btn i { font-size: 1rem; }
+
+.tab-panel { display: none; }
+.tab-panel.active { display: block; animation: fadeIn 0.3s; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+.card {
+  background: var(--color-bg-primary);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-base);
+  padding: 24px;
+  margin-bottom: 16px;
+}
+.card-accent { border-top: 3px solid var(--color-primary-400); }
+.card-header { margin-bottom: 16px; }
+.card-title {
+  font-size: 1.125rem; font-weight: 600;
+  color: var(--color-primary-700);
+  display: flex; align-items: center; gap: 8px;
+}
+.card-title i { color: var(--color-primary-400); }
+
+.section-title {
+  font-size: 1.25rem; font-weight: 700;
+  color: var(--color-primary-700);
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--color-primary-300);
+}
+
+.calc-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.form-group { margin-bottom: 16px; }
+.form-label {
+  display: block; font-size: 0.875rem;
+  font-weight: 500; color: var(--color-text-secondary);
+  margin-bottom: 6px;
+}
+.form-input, .form-select {
+  width: 100%; padding: 10px 14px;
+  border: 1px solid var(--color-border-primary);
+  border-radius: var(--radius-base);
+  font-family: inherit; font-size: 1rem;
+  color: var(--color-text-primary);
+  background: white; min-height: 44px;
+  transition: border-color 0.2s;
+}
+.form-input:focus, .form-select:focus {
+  border-color: var(--color-border-accent);
+  box-shadow: 0 0 0 3px rgba(0,104,245,0.1);
+  outline: none;
+}
+
+.btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  gap: 8px; padding: 10px 20px;
+  border: none; border-radius: var(--radius-base);
+  font-family: inherit; font-size: 0.875rem; font-weight: 600;
+  cursor: pointer; min-height: 44px;
+  transition: all 0.2s;
+}
+.btn-primary { background: var(--color-primary-500); color: white; }
+.btn-primary:hover { background: var(--color-primary-600); }
+.btn-secondary { background: var(--color-bg-secondary); color: var(--color-primary-500); border: 1px solid var(--color-border-primary); }
+.btn-secondary:hover { background: var(--color-primary-200); }
+
+.result-box {
+  background: var(--color-primary-200);
+  border: 2px solid var(--color-primary-400);
+  border-radius: var(--radius-xl);
+  padding: 20px; margin-top: 16px;
+  text-align: center;
+}
+.result-label { font-size: 0.875rem; color: var(--color-text-secondary); margin-bottom: 4px; }
+.result-value { font-size: 1.5rem; font-weight: 700; color: var(--color-primary-700); }
+.result-sub { font-size: 0.875rem; color: var(--color-text-secondary); margin-top: 4px; }
+
+.data-table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
+.data-table th {
+  background: #ebeff3; padding: 12px 10px;
+  text-align: right; font-weight: 600;
+  color: var(--color-text-primary);
+  border-bottom: 2px solid var(--color-border-primary);
+}
+.data-table td {
+  padding: 10px; border-bottom: 1px solid var(--color-border-primary);
+  vertical-align: middle;
+}
+.data-table tr:hover td { background: var(--color-bg-secondary); }
+
+.badge {
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: 2px 10px; border-radius: var(--radius-full);
+  font-size: 0.75rem; font-weight: 600;
+}
+.badge-info { background: var(--color-primary-200); color: var(--color-primary-700); }
+.badge-success { background: var(--color-success-light); color: var(--color-success); }
+.badge-warning { background: var(--color-warning-bg); color: var(--color-warning-text); }
+.badge-error { background: var(--color-error-light); color: var(--color-error); }
+
+.alert {
+  display: flex; gap: 12px; padding: 16px;
+  border-radius: var(--radius-base); margin-bottom: 16px;
+}
+.alert-info { background: var(--color-info-bg); border: 1px solid var(--color-info); }
+.alert-warning { background: var(--color-warning-bg); border: 1px solid var(--color-warning-text); }
+.alert-icon { font-size: 1.25rem; flex-shrink: 0; margin-top: 2px; }
+.alert-info .alert-icon { color: var(--color-info); }
+.alert-warning .alert-icon { color: var(--color-warning-text); }
+
+.info-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 12px; }
+.info-item { display: flex; gap: 8px; padding: 12px; background: var(--color-bg-secondary); border-radius: var(--radius-base); }
+.info-item-icon { color: var(--color-primary-400); font-size: 1.1rem; margin-top: 2px; }
+.info-item-label { font-size: 0.8rem; color: var(--color-text-secondary); }
+.info-item-value { font-weight: 600; color: var(--color-text-primary); }
+
+.supplier-card {
+  border: 1px solid var(--color-border-primary);
+  border-radius: var(--radius-xl); padding: 20px;
+  background: white; transition: box-shadow 0.2s;
+}
+.supplier-card:hover { box-shadow: var(--shadow-lg); }
+.supplier-name { font-size: 1rem; font-weight: 700; color: var(--color-primary-700); margin-bottom: 8px; }
+.supplier-meta { font-size: 0.8rem; color: var(--color-text-secondary); margin-bottom: 12px; }
+.supplier-regions { display: flex; flex-wrap: wrap; gap: 4px; }
+.supplier-region { font-size: 0.75rem; padding: 2px 8px; background: var(--color-primary-100); border-radius: var(--radius-full); color: var(--color-primary-600); }
+
+.accordion-item { border: 1px solid var(--color-border-primary); border-radius: var(--radius-base); margin-bottom: 8px; overflow: hidden; }
+.accordion-header {
+  width: 100%; padding: 14px 16px;
+  display: flex; align-items: center; justify-content: space-between;
+  background: white; border: none; cursor: pointer;
+  font-family: inherit; font-size: 0.9rem; font-weight: 600;
+  color: var(--color-text-primary); min-height: 44px;
+  transition: background 0.2s;
+}
+.accordion-header:hover { background: var(--color-bg-secondary); }
+.accordion-header i.chevron { transition: transform 0.3s; color: var(--color-primary-400); }
+.accordion-item.open .accordion-header i.chevron { transform: rotate(180deg); }
+.accordion-content { display: none; padding: 0 16px 16px; }
+.accordion-item.open .accordion-content { display: block; }
+
+.steps-list { counter-reset: step; list-style: none; padding: 0; }
+.steps-list li {
+  counter-increment: step; position: relative;
+  padding: 12px 12px 12px 0; margin-right: 32px;
+  border-bottom: 1px solid var(--color-border-primary);
+}
+.steps-list li::before {
+  content: counter(step);
+  position: absolute; right: -32px; top: 12px;
+  width: 24px; height: 24px;
+  background: var(--color-primary-400); color: white;
+  border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  font-size: 0.75rem; font-weight: 700;
+}
+
+.highlight-box {
+  background: linear-gradient(135deg, var(--color-primary-100), var(--color-primary-200));
+  border-right: 4px solid var(--color-primary-400);
+  padding: 16px; border-radius: var(--radius-base);
+  margin: 12px 0;
+}
+
+.search-box {
+  position: relative; margin-bottom: 16px;
+}
+.search-box input {
+  width: 100%; padding: 12px 44px 12px 16px;
+  border: 1px solid var(--color-border-primary);
+  border-radius: var(--radius-full);
+  font-family: inherit; font-size: 0.9rem;
+  min-height: 44px;
+}
+.search-box input:focus { border-color: var(--color-border-accent); box-shadow: 0 0 0 3px rgba(0,104,245,0.1); outline: none; }
+.search-box i { position: absolute; right: 16px; top: 50%; transform: translateY(-50%); color: var(--color-text-secondary); }
+
+.quick-links {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 12px; margin-bottom: 24px;
+}
+.quick-link {
+  display: flex; align-items: center; gap: 10px;
+  padding: 14px 16px; background: white;
+  border: 1px solid var(--color-border-primary);
+  border-radius: var(--radius-base);
+  cursor: pointer; transition: all 0.2s;
+  font-size: 0.875rem; font-weight: 500;
+  min-height: 44px;
+}
+.quick-link:hover { border-color: var(--color-primary-400); background: var(--color-primary-50); box-shadow: var(--shadow-base); }
+.quick-link i { color: var(--color-primary-400); font-size: 1.1rem; }
+
+.stat-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px; margin-bottom: 24px; }
+.stat-card { background: white; border-radius: var(--radius-xl); padding: 16px; text-align: center; box-shadow: var(--shadow-base); }
+.stat-card-value { font-size: 1.75rem; font-weight: 700; color: var(--color-primary-700); }
+.stat-card-label { font-size: 0.8rem; color: var(--color-text-secondary); margin-top: 4px; }
+
+.table-responsive { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
+@media (max-width: 768px) {
+  .tabs-nav { gap: 2px; padding: 4px; }
+  .tab-btn { padding: 8px 12px; font-size: 0.75rem; }
+  .tab-btn span { display: none; }
+  .calc-grid { grid-template-columns: 1fr; }
+  .info-grid { grid-template-columns: 1fr; }
+  .quick-links { grid-template-columns: 1fr 1fr; }
+  .stat-cards { grid-template-columns: 1fr 1fr; }
+  main { padding: 16px 12px 60px; }
+  .card { padding: 16px; }
+}
+</style>
+</head>
+<body>
+<a href="#main-content" class="skip-link">דלג לתוכן הראשי</a>
+
+<header>
+  <div class="header-inner">
+    <div class="header-logo">
+      <div class="header-logo-icon"><i class="far fa-building-columns" aria-hidden="true"></i></div>
+      <div>
+        <div class="header-title">מערכת ניהול תקציב</div>
+        <div class="header-subtitle">אגף ייעוץ לאזרח הוותיק ומשפחתו | המוסד לביטוח לאומי</div>
+      </div>
+    </div>
+    <div class="header-date">
+      <i class="far fa-calendar" aria-hidden="true"></i>
+      <span id="currentDate"></span>
+    </div>
+  </div>
+</header>
+
+<main id="main-content">
+  <nav class="tabs-nav" role="tablist" aria-label="סעיפי מערכת התקציב">
+    <button class="tab-btn active" role="tab" aria-selected="true" data-tab="dashboard"><i class="far fa-gauge-high" aria-hidden="true"></i><span>ראשי</span></button>
+    <button class="tab-btn" role="tab" aria-selected="false" data-tab="nashm"><i class="far fa-chalkboard-user" aria-hidden="true"></i><span>מרצים</span></button>
+    <button class="tab-btn" role="tab" aria-selected="false" data-tab="transport"><i class="far fa-bus" aria-hidden="true"></i><span>הסעות</span></button>
+    <button class="tab-btn" role="tab" aria-selected="false" data-tab="budget"><i class="far fa-coins" aria-hidden="true"></i><span>סעיפים</span></button>
+    <button class="tab-btn" role="tab" aria-selected="false" data-tab="procedures"><i class="far fa-list-check" aria-hidden="true"></i><span>נהלים</span></button>
+    <button class="tab-btn" role="tab" aria-selected="false" data-tab="suppliers"><i class="far fa-truck" aria-hidden="true"></i><span>ספקים</span></button>
+    <button class="tab-btn" role="tab" aria-selected="false" data-tab="help"><i class="far fa-circle-question" aria-hidden="true"></i><span>עזרה</span></button>
+  </nav>
+
+  <!-- TAB: DASHBOARD -->
+  <div class="tab-panel active" id="panel-dashboard" role="tabpanel">
+    <div class="stat-cards">
+      <div class="stat-card"><div class="stat-card-value">324₪</div><div class="stat-card-label">תעריף מרצה מקסימלי (קב' 1)</div></div>
+      <div class="stat-card"><div class="stat-card-value">5</div><div class="stat-card-label">ספקי הסעות פעילים</div></div>
+      <div class="stat-card"><div class="stat-card-value">12</div><div class="stat-card-label">סלי שירות</div></div>
+      <div class="stat-card"><div class="stat-card-value">250₪</div><div class="stat-card-label">תקרת החזר נסיעות/חודש</div></div>
+    </div>
+
+    <div class="quick-links">
+      <div class="quick-link" onclick="switchTab('nashm')"><i class="far fa-calculator" aria-hidden="true"></i>מחשבון תעריפי נש"מ</div>
+      <div class="quick-link" onclick="switchTab('transport')"><i class="far fa-route" aria-hidden="true"></i>חישוב עלות הסעה</div>
+      <div class="quick-link" onclick="switchTab('budget')"><i class="far fa-folder-open" aria-hidden="true"></i>סעיפי תקציב</div>
+      <div class="quick-link" onclick="switchTab('procedures')"><i class="far fa-clipboard-list" aria-hidden="true"></i>תהליך הזמנת הסעה</div>
+      <div class="quick-link" onclick="switchTab('suppliers')"><i class="far fa-address-book" aria-hidden="true"></i>פרטי ספקים</div>
+    </div>
+
+    <div class="card card-accent">
+      <div class="card-header"><h2 class="card-title"><i class="far fa-bell" aria-hidden="true"></i>תזכורות חשובות</h2></div>
+      <div class="alert alert-warning" role="alert">
+        <i class="far fa-exclamation-triangle alert-icon" aria-hidden="true"></i>
+        <div><strong>הזמנת רכש</strong> — יש לבצע לפחות חודש לפני הפעילות, ולא יאוחר משבועיים. אין לפרסם פעילות ללא הזמנת רכש ביד!</div>
+      </div>
+      <div class="alert alert-info" role="alert">
+        <i class="far fa-circle-info alert-icon" aria-hidden="true"></i>
+        <div><strong>תשלום מרצה</strong> — יתבצע על פי תעריפי נש"מ בלבד. התעריף משתנה בהתאם להשכלת המרצה. מעל 5,000₪ — חובה לבצע תיחור.</div>
+      </div>
+      <div class="alert alert-info" role="alert">
+        <i class="far fa-circle-info alert-icon" aria-hidden="true"></i>
+        <div><strong>דמי רצינות</strong> — בכל פעילות הכרוכה בהוצאות כספיות: גביית 20₪ ממתנדב. מקבלי ה"ה פטורים.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><h2 class="card-title"><i class="far fa-file-lines" aria-hidden="true"></i>טפסים נדרשים</h2></div>
+      <div class="info-grid">
+        <div class="info-item"><i class="far fa-file-alt info-item-icon" aria-hidden="true"></i><div><div class="info-item-label">הזמנת מרצה</div><div class="info-item-value">בל/496</div></div></div>
+        <div class="info-item"><i class="far fa-file-alt info-item-icon" aria-hidden="true"></i><div><div class="info-item-label">החזר נסיעות ת"צ</div><div class="info-item-value">בל/4316</div></div></div>
+        <div class="info-item"><i class="far fa-file-alt info-item-icon" aria-hidden="true"></i><div><div class="info-item-label">החזר נסיעות רכב</div><div class="info-item-value">בל/4304</div></div></div>
+        <div class="info-item"><i class="far fa-file-alt info-item-icon" aria-hidden="true"></i><div><div class="info-item-label">הסעה מזדמנת</div><div class="info-item-value">בל/4341</div></div></div>
+        <div class="info-item"><i class="far fa-file-alt info-item-icon" aria-hidden="true"></i><div><div class="info-item-label">הסעה צמודה</div><div class="info-item-value">בל/4342</div></div></div>
+        <div class="info-item"><i class="far fa-file-alt info-item-icon" aria-hidden="true"></i><div><div class="info-item-label">הסעה קבועה</div><div class="info-item-value">בל/4343</div></div></div>
+        <div class="info-item"><i class="far fa-file-alt info-item-icon" aria-hidden="true"></i><div><div class="info-item-label">דמי רצינות</div><div class="info-item-value">בל/4322</div></div></div>
+        <div class="info-item"><i class="far fa-file-alt info-item-icon" aria-hidden="true"></i><div><div class="info-item-label">הוראת תשלום</div><div class="info-item-value">בל/716</div></div></div>
+        <div class="info-item"><i class="far fa-file-alt info-item-icon" aria-hidden="true"></i><div><div class="info-item-label">פרטי בנק מתנדב</div><div class="info-item-value">בל/4327</div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB: NASHM CALCULATOR -->
+  <div class="tab-panel" id="panel-nashm" role="tabpanel">
+    <h2 class="section-title"><i class="far fa-calculator" aria-hidden="true"></i> מחשבון תעריפי נש"מ — מרצים</h2>
+
+    <div class="card card-accent">
+      <div class="card-header"><h3 class="card-title"><i class="far fa-sliders" aria-hidden="true"></i>חישוב עלות הרצאה</h3></div>
+      <div class="calc-grid">
+        <div class="form-group">
+          <label class="form-label" for="lecturer-group">קבוצת מרצה</label>
+          <select class="form-select" id="lecturer-group">
+            <option value="324">קבוצה 1 — מרצה בכיר חיצוני (324₪)</option>
+            <option value="222">קבוצה 2 — מרצה אקדמי בכיר (222₪)</option>
+            <option value="126">קבוצה 3 — תואר שני/דרגה 19-21 (126₪)</option>
+            <option value="86">קבוצה 4 — תואר ראשון/דרגה 18 (86₪)</option>
+            <option value="69">קבוצה 5 — מדריך מוסמך/דרגה 17 (69₪)</option>
+            <option value="62">קבוצה 6 — מדריך בלתי מוסמך (62₪)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="lecture-hours">שעות הרצאה</label>
+          <input type="number" class="form-input" id="lecture-hours" min="0.5" step="0.5" value="1">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="break-time">זמן הפסקה (דקות, מתחת ל-15 = 0)</label>
+          <input type="number" class="form-input" id="break-time" min="0" value="0">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="km-distance">ק"מ הלוך+חזור (מתחת ל-30 לכיוון = 0)</label>
+          <input type="number" class="form-input" id="km-distance" min="0" value="0">
+        </div>
+      </div>
+      <button class="btn btn-primary" onclick="calcNashm()" aria-label="חשב תעריף">
+        <i class="far fa-calculator" aria-hidden="true"></i> חשב עלות
+      </button>
+      <div id="nashm-result" class="result-box" style="display:none;" aria-live="polite">
+        <div class="result-label">סה"כ עלות ההרצאה (לא כולל מע"מ)</div>
+        <div class="result-value" id="nashm-total">0 ₪</div>
+        <div class="result-sub" id="nashm-breakdown"></div>
+        <div class="result-sub" style="margin-top:8px;"><strong id="nashm-with-vat"></strong></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><h3 class="card-title"><i class="far fa-table" aria-hidden="true"></i>טבלת תעריפים מלאה (תחולה 01.08.2023)</h3></div>
+      <div class="table-responsive">
+        <table class="data-table" aria-label="תעריפי מרצים">
+          <thead>
+            <tr><th>קבוצה</th><th>שעת הרצאה</th><th>הכנה (1/3)</th><th>סה"כ+הכנה</th><th>עובד מדינה</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><span class="badge badge-info">קבוצה 1</span></td><td>324 ₪</td><td>108 ₪</td><td>432 ₪</td><td>לא רלוונטי</td></tr>
+            <tr><td><span class="badge badge-info">קבוצה 1א'</span></td><td>—</td><td>—</td><td>—</td><td>245+82=327 ₪</td></tr>
+            <tr><td><span class="badge badge-info">קבוצה 2</span></td><td>222 ₪</td><td>74 ₪</td><td>296 ₪</td><td>לא רלוונטי</td></tr>
+            <tr><td><span class="badge badge-info">קבוצה 3</span></td><td>126 ₪</td><td>88 ₪</td><td>214 ₪</td><td>138+46=184 ₪</td></tr>
+            <tr><td><span class="badge badge-info">קבוצה 4</span></td><td>86 ₪</td><td>88 ₪</td><td>174 ₪</td><td>86+44=130 ₪</td></tr>
+            <tr><td><span class="badge badge-info">קבוצה 5</span></td><td>69 ₪</td><td>88 ₪</td><td>157 ₪</td><td>69+44=113 ₪</td></tr>
+            <tr><td><span class="badge badge-info">קבוצה 6</span></td><td>62 ₪</td><td>88 ₪</td><td>150 ₪</td><td>62+44=106 ₪</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><h3 class="card-title"><i class="far fa-circle-info" aria-hidden="true"></i>כללים חשובים</h3></div>
+      <div class="accordion">
+        <div class="accordion-item"><button class="accordion-header" aria-expanded="false"><span>שעת הכנה — כללי חישוב</span><i class="far fa-chevron-down chevron" aria-hidden="true"></i></button><div class="accordion-content"><p>בגין כל שעת הדרכה יאושר תשלום של <strong>1/3 שעת הכנה</strong> לכל היותר. לדוגמה: 3 שעות הדרכה = שעת הכנה אחת מקסימום.</p></div></div>
+        <div class="accordion-item"><button class="accordion-header" aria-expanded="false"><span>ביטול זמן נסיעות</span><i class="far fa-chevron-down chevron" aria-hidden="true"></i></button><div class="accordion-content"><p>משולם רק כשהמרחק <strong>מעל 30 ק"מ בכיוון אחד</strong>. החישוב: סה"כ ק"מ (הלוך+חזור) / 50 × תעריף לשעת הרצאה × 40%.</p></div></div>
+        <div class="accordion-item"><button class="accordion-header" aria-expanded="false"><span>עובד מדינה — הפחתות</span><i class="far fa-chevron-down chevron" aria-hidden="true"></i></button><div class="accordion-content"><p>בשעות עבודה רגילות: <strong>הפחתה 25%</strong>. לאחר שעות עבודה: 100% מהתעריף, אך <strong>ללא</strong> גמול שעות נוספות. עובד מדינה <strong>אינו זכאי</strong> לביטול זמן.</p></div></div>
+        <div class="accordion-item"><button class="accordion-header" aria-expanded="false"><span>הדרכה דיגיטלית (ZOOM/Teams)</span><i class="far fa-chevron-down chevron" aria-hidden="true"></i></button><div class="accordion-content"><p>התשלום זהה לתעריפי החוזר. <strong>אין תשלומים נוספים</strong>: לא נסיעות, לא ביטול זמן, לא הפסקה.</p></div></div>
+        <div class="accordion-item"><button class="accordion-header" aria-expanded="false"><span>תיחור (מעל 5,000₪)</span><i class="far fa-chevron-down chevron" aria-hidden="true"></i></button><div class="accordion-content"><p>בהתקשרות מעל 5,000₪ להרצאה בודדת/סדרה — <strong>חובה לבצע תיחור</strong>. אם לא מעוניינים לפנות למרצים אחרים, יש לקבל <strong>אישור החשב מראש</strong>.</p></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB: TRANSPORT -->
+  <div class="tab-panel" id="panel-transport" role="tabpanel">
+    <h2 class="section-title"><i class="far fa-bus" aria-hidden="true"></i> הסעות — מחשבון ומידע</h2>
+
+    <div class="card card-accent">
+      <div class="card-header"><h3 class="card-title"><i class="far fa-calculator" aria-hidden="true"></i>מחשבון עלות הסעה מזדמנת</h3></div>
+      <div class="calc-grid">
+        <div class="form-group">
+          <label class="form-label" for="transport-supplier">ספק</label>
+          <select class="form-select" id="transport-supplier">
+            <option value="superbus">סופרבוס — אוטובוסים צפון/דרום</option>
+            <option value="afikim">אלקטרה אפיקים — אצ"זים צפון</option>
+            <option value="horev">מוניות חורב — מוניות צפון/דרום</option>
+            <option value="shasha">מסיעי אריה שאשא — ירושלים/מרכז</option>
+            <option value="sitton">מוני סיטון — אצ"זים מרכז/דרום</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="vehicle-type">סוג רכב</label>
+          <select class="form-select" id="vehicle-type">
+            <option value="bus">אוטובוס ציבורי</option>
+            <option value="busLux">אוטובוס תיירותי מפואר</option>
+            <option value="mini">מיניבוס/אצ"ז</option>
+            <option value="taxi">מונית רגילה</option>
+            <option value="taxiAccess">מונית נגישה</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="travel-hours">שעות נסיעה (כולל המתנה)</label>
+          <input type="number" class="form-input" id="travel-hours" min="1" step="0.25" value="4">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="travel-km">מרחק ק"מ</label>
+          <input type="number" class="form-input" id="travel-km" min="0" value="50">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="is-round-trip">סוג נסיעה</label>
+          <select class="form-select" id="is-round-trip">
+            <option value="round">צמודה (הלוך וחזור)</option>
+            <option value="one">חד כיוונית (+ נסיעת חזור)</option>
+          </select>
+        </div>
+      </div>
+      <button class="btn btn-primary" onclick="calcTransport()" aria-label="חשב עלות הסעה">
+        <i class="far fa-calculator" aria-hidden="true"></i> חשב עלות
+      </button>
+      <div id="transport-result" class="result-box" style="display:none;" aria-live="polite">
+        <div class="result-label">עלות הסעה משוערת (כולל מע"מ)</div>
+        <div class="result-value" id="transport-total">0 ₪</div>
+        <div class="result-sub" id="transport-breakdown"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><h3 class="card-title"><i class="far fa-info-circle" aria-hidden="true"></i>כללי חישוב נסיעה מזדמנת</h3></div>
+      <div class="highlight-box">
+        <p><strong>מינימום תשלום:</strong> 4 שעות פעילות לכל נסיעה מזדמנת.</p>
+        <p><strong>נסיעת חזור (לא צמודה):</strong> מרחק / 50 קמ"ש = זמן חזור. בסלים 1,7,10: 70% מעלות הנסיעה לכיוון אחד.</p>
+        <p><strong>עיגול:</strong> זמן — למרווחי 15 דקות. ק"מ — עיגול כלפי מעלה למספר שלם.</p>
+        <p><strong>שבת/חג (סלים 1,7,10):</strong> תוספת 50% על נסיעה מזדמנת שהוזמנה ביום שישי אחרי 12:00.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><h3 class="card-title"><i class="far fa-table" aria-hidden="true"></i>מחירון נסיעות קבועות — דוגמה (סופרבוס, סל 1)</h3></div>
+      <div class="table-responsive">
+        <table class="data-table" aria-label="מחירון נסיעות קבועות">
+          <thead><tr><th>סוג רכב</th><th>0-20 ק"מ</th><th>21-35 ק"מ</th><th>36-50 ק"מ</th><th>51-75 ק"מ</th></tr></thead>
+          <tbody>
+            <tr><td>אוטובוס ציבורי</td><td>457 ₪</td><td>701 ₪</td><td>864 ₪</td><td>1,226 ₪</td></tr>
+            <tr><td>אוטובוס תיירותי</td><td>582 ₪</td><td>890 ₪</td><td>1,093 ₪</td><td>1,547 ₪</td></tr>
+            <tr><td>אוטובוס ממוגן ירי</td><td>769 ₪</td><td>1,181 ₪</td><td>1,457 ₪</td><td>2,071 ₪</td></tr>
+            <tr><td>אוטובוס ממוגן אבנים</td><td>570 ₪</td><td>871 ₪</td><td>1,072 ₪</td><td>1,519 ₪</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p style="font-size:0.8rem; color: var(--color-text-secondary); margin-top:8px;">* המחירים כוללים מע"מ. לטבלה המלאה ראה נספח ד — מחירון 8.6.2026</p>
+    </div>
+  </div>
+
+  <!-- TAB: BUDGET -->
+  <div class="tab-panel" id="panel-budget" role="tabpanel">
+    <h2 class="section-title"><i class="far fa-folder-open" aria-hidden="true"></i> סעיפי תקציב</h2>
+
+    <div class="search-box">
+      <i class="far fa-search" aria-hidden="true"></i>
+      <input type="text" id="budget-search" placeholder="חיפוש סעיף..." oninput="filterBudget()" aria-label="חיפוש בסעיפי תקציב">
+    </div>
+
+    <div class="card" id="budget-list">
+      <h3 class="card-title" style="margin-bottom:16px"><i class="far fa-users" aria-hidden="true"></i> תקציב מתנדבים</h3>
+      <div class="table-responsive">
+        <table class="data-table budget-table" aria-label="סעיפי תקציב מתנדבים">
+          <thead><tr><th>סעיף</th><th>דרישה</th><th>שם הסעיף</th><th>הערות</th></tr></thead>
+          <tbody>
+            <tr><td>1107200</td><td>01</td><td>הסעות להדרכות וימי עיון</td><td><span class="badge badge-info">הסעות</span></td></tr>
+            <tr><td>1107200</td><td>02/04</td><td>כיבוד שוטף לקבוצות הדרכה</td><td><span class="badge badge-success">כיבוד</span></td></tr>
+            <tr><td>1107200</td><td>05/07</td><td>אירועים בסניפים, פעילות רב-תרבותית וסיור מקצועי</td><td><span class="badge badge-warning">אירועים</span></td></tr>
+            <tr><td>1107200</td><td>06</td><td>אמצעי עזר להדרכת מתנדבים</td><td></td></tr>
+            <tr><td>1141407</td><td>04</td><td>החזר הוצאות טלפון</td><td></td></tr>
+            <tr><td>1192004</td><td>01</td><td>תגמולים (מסגרות ומגנים) — פטור ממס</td><td><span class="badge badge-success">תגמולים</span></td></tr>
+            <tr><td>1192004</td><td>02</td><td>תגמולים (שי, חולה/פורש) — חייב במס</td><td><span class="badge badge-error">חייב מס</span></td></tr>
+            <tr><td>1192038</td><td>01</td><td>הדרכת מתנדבים — תקורה וכיבוד</td><td></td></tr>
+            <tr><td>1192038</td><td>02</td><td>הדרכת מתנדבים — מרצים</td><td><span class="badge badge-info">נש"מ</span></td></tr>
+            <tr><td>1192178</td><td>01/06</td><td>החזר נסיעה ת"צ — פטור ממס (עד 250₪)</td><td><span class="badge badge-success">פטור</span></td></tr>
+            <tr><td>1192178</td><td>02/07</td><td>החזר נסיעה רכב פרטי — פטור ממס (עד 750₪)</td><td><span class="badge badge-success">פטור</span></td></tr>
+            <tr><td>1192178</td><td>04</td><td>החזר נסיעה ת"צ — חייב במס (מעל 250₪)</td><td><span class="badge badge-error">חייב מס</span></td></tr>
+            <tr><td>1192178</td><td>05</td><td>החזר נסיעה רכב פרטי — חייב במס (מעל 750₪)</td><td><span class="badge badge-error">חייב מס</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3 class="card-title" style="margin:24px 0 16px"><i class="far fa-heart" aria-hidden="true"></i> תקציב מבוטחים</h3>
+      <div class="table-responsive">
+        <table class="data-table budget-table" aria-label="סעיפי תקציב מבוטחים">
+          <thead><tr><th>סעיף</th><th>דרישה</th><th>שם הסעיף</th><th>הערות</th></tr></thead>
+          <tbody>
+            <tr><td>1191923</td><td>01</td><td>יום הקשיש הבינלאומי</td><td></td></tr>
+            <tr><td>1191923</td><td>02</td><td>פעילות קהילתית</td><td></td></tr>
+            <tr><td>1191923</td><td>04</td><td>פעילות לקראת פרישה</td><td></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><h3 class="card-title"><i class="far fa-train" aria-hidden="true"></i>תעריפי תחבורה ציבורית (מ-25/04/2025)</h3></div>
+      <div class="table-responsive">
+        <table class="data-table" aria-label="תעריפי תחבורה ציבורית">
+          <thead><tr><th>אזור</th><th>מרחק</th><th>אוטובוס</th><th>רכבת קלה</th><th>רכבת</th></tr></thead>
+          <tbody>
+            <tr><td><span class="badge" style="background:#FFF9C4;color:#333;">צהוב</span></td><td>0-15 ק"מ</td><td>8 ₪</td><td>8 ₪</td><td>11.5 ₪</td></tr>
+            <tr><td><span class="badge" style="background:#C8E6C9;color:#1B5E20;">ירוק</span></td><td>15-40 ק"מ</td><td>14.5 ₪</td><td>15 ₪</td><td>21 ₪</td></tr>
+            <tr><td><span class="badge" style="background:#B3E5FC;color:#01579B;">תכלת</span></td><td>40-75 ק"מ</td><td>19 ₪</td><td>—</td><td>27 ₪</td></tr>
+            <tr><td><span class="badge" style="background:#BBDEFB;color:#0D47A1;">כחול</span></td><td>75-120 ק"מ</td><td>19 ₪</td><td>—</td><td>30.5 ₪</td></tr>
+            <tr><td><span class="badge" style="background:#E1BEE7;color:#4A148C;">סגול</span></td><td>120-225 ק"מ</td><td>30.5 ₪</td><td>—</td><td>52.5 ₪</td></tr>
+            <tr><td><span class="badge" style="background:#E0E0E0;color:#333;">אפור</span></td><td>מעל 225 ק"מ</td><td>74 ₪</td><td>—</td><td>—</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="highlight-box" style="margin-top:12px;">
+        <p><strong>אזרח ותיק 62-66:</strong> הנחה 50%. <strong>מגיל 67:</strong> נסיעה חינם — אין החזר.</p>
+        <p><strong>90 דקות מעבר חופשי</strong> בנסיעות עד 15 ק"מ!</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB: PROCEDURES -->
+  <div class="tab-panel" id="panel-procedures" role="tabpanel">
+    <h2 class="section-title"><i class="far fa-list-check" aria-hidden="true"></i> נהלים ותהליכים</h2>
+
+    <div class="card card-accent">
+      <div class="card-header"><h3 class="card-title"><i class="far fa-bus" aria-hidden="true"></i>תהליך הזמנת הסעה</h3></div>
+      <ol class="steps-list">
+        <li>אחראי תקציבים מפיק <strong>הזמנת רכש מפורטת</strong> לזכיין ההסעות (בל/4341, 4342 או 4343)</li>
+        <li>מנהל/ת תחום ייעוץ לאזרח הוותיק <strong>חותם/ת</strong> על ההזמנה</li>
+        <li>ההזמנה מועברת ל<strong>מנהל תחום כספים</strong> בסניף</li>
+        <li>מנהל תחום כספים בודק, <strong>מזין למערכת התחייבויות</strong>, וחותם</li>
+        <li>ההזמנה מועברת חזרה לאחראי תקציבים ב<strong>שירות הייעוץ</strong></li>
+        <li><strong>שליחת ההזמנה לזכיין</strong> באמצעות פורטל הספקים</li>
+        <li>קבלת <strong>אישור מהזכיין</strong> בפורטל</li>
+        <li>לאחר הביצוע: <strong>בדיקת חשבונית</strong> ע"י אחראי תקציב + חתימה + אישור מנהל תחום</li>
+      </ol>
+      <div class="alert alert-warning" style="margin-top:16px;" role="alert">
+        <i class="far fa-exclamation-triangle alert-icon" aria-hidden="true"></i>
+        <div>יש לוודא: סכום חשבונית (ללא מע"מ+הצמדה) = סכום הזמנת רכש. לא חלפו 14 יום מהנפקה.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><h3 class="card-title"><i class="far fa-ban" aria-hidden="true"></i>ספק מסרב — מה עושים?</h3></div>
+      <ol class="steps-list">
+        <li>בקשו מהחברה <strong>אישור בכתב</strong> על סירוב לספק הנסיעה</li>
+        <li>העבירו את האישור ל<strong>אחראית תקציבים באגף</strong></li>
+        <li>האגף יפנה ל<strong>תחום תחבורה במינהל הלוגיסטיקה</strong></li>
+        <li>קבלת אישור ל<strong>הזמנה שלא מן המכרז</strong></li>
+      </ol>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><h3 class="card-title"><i class="far fa-money-check" aria-hidden="true"></i>כללי הזמנת רכש</h3></div>
+      <div class="accordion">
+        <div class="accordion-item"><button class="accordion-header" aria-expanded="false"><span>בדיקת תקציב לפני הזמנה</span><i class="far fa-chevron-down chevron" aria-hidden="true"></i></button><div class="accordion-content"><p>יש לבדוק שקיים תקציב בסעיף <strong>לפני</strong> שמעבירים למחלקת כספים. בקשת תוספת — פניה בקש"ב למטה עם הסבר מנומק.</p></div></div>
+        <div class="accordion-item"><button class="accordion-header" aria-expanded="false"><span>הצעת מחיר — חובה</span><i class="far fa-chevron-down chevron" aria-hidden="true"></i></button><div class="accordion-content"><p>אין לבצע הזמנת רכש <strong>ללא הצעת מחיר</strong> ובהתאם לנוהל התקשרויות, למעט הסכמים. כשמקבלים הצעה מספק בהסכם, חובה לרשום: "ההזמנה על פי ההסכם החתום עם ביטוח לאומי בלבד."</p></div></div>
+        <div class="accordion-item"><button class="accordion-header" aria-expanded="false"><span>פסקת ביטחון/חירום — חובה בכל הצעת מחיר</span><i class="far fa-chevron-down chevron" aria-hidden="true"></i></button><div class="accordion-content"><p><em>"האירוע יתקיים בהתאם להוראות אגף ביטחון / פיקוד העורף. במידה ולא יהיה ניתן לקיימו, ידחה למועד מוסכם."</em></p></div></div>
+        <div class="accordion-item"><button class="accordion-header" aria-expanded="false"><span>מורשי חתימה על ועדת רכישה</span><i class="far fa-chevron-down chevron" aria-hidden="true"></i></button><div class="accordion-content"><p><strong>3 חותמים:</strong> מנהל/ת הסניף + מנהל/ת תחום כספים + מנהל/ת תחום ייעוץ לאזרח הוותיק.</p></div></div>
+        <div class="accordion-item"><button class="accordion-header" aria-expanded="false"><span>חשבוניות — כללי טיפול</span><i class="far fa-chevron-down chevron" aria-hidden="true"></i></button><div class="accordion-content"><p>חותמת "התקבל" + תאריך + חתימת מנהלת התחום. בחשבונית אחרונה: "גמר חשבון" לסגירת ההתחייבות. לצרף תוכנית/הזמנה/מזכר.</p></div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><h3 class="card-title"><i class="far fa-hand-holding-heart" aria-hidden="true"></i>סיור מקצועי — דגשים</h3></div>
+      <div class="info-grid">
+        <div class="info-item"><i class="far fa-shield-check info-item-icon" aria-hidden="true"></i><div><div class="info-item-value">אישור מסלול מאגף ביטחון</div></div></div>
+        <div class="info-item"><i class="far fa-kit-medical info-item-icon" aria-hidden="true"></i><div><div class="info-item-value">חובש בכל סיור (חובש נוסף לכל פיצול)</div></div></div>
+        <div class="info-item"><i class="far fa-graduation-cap info-item-icon" aria-hidden="true"></i><div><div class="info-item-value">לפחות פעילות מקצועית אחת רלוונטית</div></div></div>
+        <div class="info-item"><i class="far fa-list-ul info-item-icon" aria-hidden="true"></i><div><div class="info-item-value">רשימת משתתפים + אנשי קשר לחירום</div></div></div>
+        <div class="info-item"><i class="far fa-gun info-item-icon" aria-hidden="true"></i><div><div class="info-item-value">מאבטח — לפי הנחיית אגף ביטחון (חובש חמוש)</div></div></div>
+        <div class="info-item"><i class="far fa-copy info-item-icon" aria-hidden="true"></i><div><div class="info-item-value">העתק רשימה + פרטי ספקים להשאיר במזכירות</div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB: SUPPLIERS -->
+  <div class="tab-panel" id="panel-suppliers" role="tabpanel">
+    <h2 class="section-title"><i class="far fa-truck" aria-hidden="true"></i> ספקי הסעות — פרטי התקשרות</h2>
+
+    <div class="calc-grid">
+      <div class="supplier-card">
+        <div class="supplier-name">סופרבוס היסעים ותיור</div>
+        <div class="supplier-meta">ח.פ 512947599 | הסכם 20939</div>
+        <div class="info-item" style="background:transparent;padding:4px 0;"><i class="far fa-user info-item-icon" aria-hidden="true"></i><div><div class="info-item-label">מנהל לקוחות</div><div class="info-item-value">יובל בן בנימין — 050-2771495</div></div></div>
+        <div class="info-item" style="background:transparent;padding:4px 0;"><i class="far fa-phone info-item-icon" aria-hidden="true"></i><div><div class="info-item-label">שירות</div><div class="info-item-value">דוד מאיר — 050-3170401</div></div></div>
+        <div class="info-item" style="background:transparent;padding:4px 0;"><i class="far fa-envelope info-item-icon" aria-hidden="true"></i><div><div class="info-item-value">rachelib@superbus.co.il</div></div></div>
+        <div class="supplier-regions">
+          <span class="supplier-region">סל 1 — אוטובוסים צפון</span>
+          <span class="supplier-region">סל 10 — אוטובוסים דרום</span>
+        </div>
+      </div>
+
+      <div class="supplier-card">
+        <div class="supplier-name">אלקטרה אפיקים</div>
+        <div class="supplier-meta">ח.פ 510917388 | הסכם 19649</div>
+        <div class="info-item" style="background:transparent;padding:4px 0;"><i class="far fa-user info-item-icon" aria-hidden="true"></i><div><div class="info-item-label">מנהל לקוחות</div><div class="info-item-value">דוד בן-מויאל — 054-3346633</div></div></div>
+        <div class="info-item" style="background:transparent;padding:4px 0;"><i class="far fa-phone info-item-icon" aria-hidden="true"></i><div><div class="info-item-label">שירות</div><div class="info-item-value">אסף עמוס — 073-2787712</div></div></div>
+        <div class="info-item" style="background:transparent;padding:4px 0;"><i class="far fa-envelope info-item-icon" aria-hidden="true"></i><div><div class="info-item-value">sivanba@afikim-t.co.il</div></div></div>
+        <div class="supplier-regions">
+          <span class="supplier-region">סל 2 — אצ"זים צפון</span>
+        </div>
+      </div>
+
+      <div class="supplier-card">
+        <div class="supplier-name">מוניות חורב</div>
+        <div class="supplier-meta">ח.פ 513308395 | הסכם 19650</div>
+        <div class="info-item" style="background:transparent;padding:4px 0;"><i class="far fa-user info-item-icon" aria-hidden="true"></i><div><div class="info-item-label">מנהלת לקוחות</div><div class="info-item-value">מיכל מכבי — 053-2017149</div></div></div>
+        <div class="info-item" style="background:transparent;padding:4px 0;"><i class="far fa-envelope info-item-icon" aria-hidden="true"></i><div><div class="info-item-value">88888taxi@gmail.com</div></div></div>
+        <div class="info-item" style="background:transparent;padding:4px 0;"><i class="far fa-fax info-item-icon" aria-hidden="true"></i><div><div class="info-item-value">04-8551116</div></div></div>
+        <div class="supplier-regions">
+          <span class="supplier-region">סל 3 — מוניות צפון</span>
+          <span class="supplier-region">סל 12 — מוניות דרום</span>
+        </div>
+      </div>
+
+      <div class="supplier-card">
+        <div class="supplier-name">מסיעי אריה שאשא</div>
+        <div class="supplier-meta">ח.פ 510840028 | הסכם 22817</div>
+        <div class="info-item" style="background:transparent;padding:4px 0;"><i class="far fa-user info-item-icon" aria-hidden="true"></i><div><div class="info-item-label">מנהל לקוחות</div><div class="info-item-value">שלומי אסולין — 050-4588888</div></div></div>
+        <div class="info-item" style="background:transparent;padding:4px 0;"><i class="far fa-phone info-item-icon" aria-hidden="true"></i><div><div class="info-item-label">שירות</div><div class="info-item-value">03-6535117</div></div></div>
+        <div class="info-item" style="background:transparent;padding:4px 0;"><i class="far fa-envelope info-item-icon" aria-hidden="true"></i><div><div class="info-item-value">tami@shasha.co.il</div></div></div>
+        <div class="supplier-regions">
+          <span class="supplier-region">סל 4 — אוטובוסים ירושלים</span>
+          <span class="supplier-region">סל 5 — אצ"זים ירושלים</span>
+          <span class="supplier-region">סל 6 — מוניות ירושלים</span>
+          <span class="supplier-region">סל 7 — אוטובוסים מרכז</span>
+        </div>
+      </div>
+
+      <div class="supplier-card">
+        <div class="supplier-name">מוני סיטון</div>
+        <div class="supplier-meta">ח.פ 511011140 | הסכם 19653</div>
+        <div class="info-item" style="background:transparent;padding:4px 0;"><i class="far fa-user info-item-icon" aria-hidden="true"></i><div><div class="info-item-label">מנהל לקוחות</div><div class="info-item-value">אייל שלום — 052-4280615</div></div></div>
+        <div class="info-item" style="background:transparent;padding:4px 0;"><i class="far fa-phone info-item-icon" aria-hidden="true"></i><div><div class="info-item-label">שירות</div><div class="info-item-value">08-9431461 / *50010</div></div></div>
+        <div class="info-item" style="background:transparent;padding:4px 0;"><i class="far fa-envelope info-item-icon" aria-hidden="true"></i><div><div class="info-item-value">sale1@moni-sitton.co.il</div></div></div>
+        <div class="supplier-regions">
+          <span class="supplier-region">סל 8 — אצ"זים מרכז</span>
+          <span class="supplier-region">סל 9 — מוניות מרכז</span>
+          <span class="supplier-region">סל 11 — אצ"זים דרום</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:16px;">
+      <div class="card-header"><h3 class="card-title"><i class="far fa-map" aria-hidden="true"></i>חלוקה לסלים — מדריך מהיר</h3></div>
+      <div class="table-responsive">
+        <table class="data-table" aria-label="חלוקת סלים">
+          <thead><tr><th>סל</th><th>אזור</th><th>התמחות</th><th>ספק</th><th>תוקף עד</th></tr></thead>
+          <tbody>
+            <tr><td>1</td><td>צפון</td><td>אוטובוסים</td><td>סופרבוס</td><td>15.01.2027</td></tr>
+            <tr><td>2</td><td>צפון</td><td>אצ"זים</td><td>אלקטרה אפיקים</td><td>15.01.2027</td></tr>
+            <tr><td>3</td><td>צפון</td><td>מוניות</td><td>מוניות חורב</td><td>15.01.2027</td></tr>
+            <tr><td>4</td><td>ירושלים+יו"ש</td><td>אוטובוסים</td><td>שאשא</td><td>15.01.2027</td></tr>
+            <tr><td>5</td><td>ירושלים+יו"ש</td><td>אצ"זים</td><td>שאשא</td><td>15.01.2027</td></tr>
+            <tr><td>6</td><td>ירושלים+יו"ש</td><td>מוניות</td><td>שאשא</td><td>15.01.2027</td></tr>
+            <tr><td>7</td><td>מרכז</td><td>אוטובוסים</td><td>שאשא</td><td>15.01.2027</td></tr>
+            <tr><td>8</td><td>מרכז</td><td>אצ"זים</td><td>מוני סיטון</td><td>15.01.2027</td></tr>
+            <tr><td>9</td><td>מרכז</td><td>מוניות</td><td>מוני סיטון</td><td>15.01.2027</td></tr>
+            <tr><td>10</td><td>דרום</td><td>אוטובוסים</td><td>סופרבוס</td><td>15.01.2027</td></tr>
+            <tr><td>11</td><td>דרום</td><td>אצ"זים</td><td>מוני סיטון</td><td>15.01.2027</td></tr>
+            <tr><td>12</td><td>דרום</td><td>מוניות</td><td>מוניות חורב</td><td>15.01.2027</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <!-- TAB: HELP -->
+  <div class="tab-panel" id="panel-help" role="tabpanel">
+    <h2 class="section-title"><i class="far fa-circle-question" aria-hidden="true"></i> מדריך שימוש — חוברת הסבר</h2>
+
+    <div class="card card-accent">
+      <div class="card-header"><h3 class="card-title"><i class="far fa-book-open" aria-hidden="true"></i>מה זה ולמה זה נועד?</h3></div>
+      <p style="font-size:0.95rem; line-height:1.8;">מערכת ניהול התקציב היא <strong>כלי עצמאי</strong> המרכז את כל המידע הנדרש לניהול תקציבי בסניף — תעריפים, נהלים, ספקים ומחשבונים — במקום אחד נגיש.</p>
+      <div class="highlight-box">
+        <strong>המטרה:</strong> לאפשר לך לפעול באופן עצמאי ולקבל תשובות מיידיות, ללא צורך בפנייה למטה בשאלות שוטפות על תעריפים, ספקים ונהלים.
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><h3 class="card-title"><i class="far fa-display" aria-hidden="true"></i>פתיחת המערכת</h3></div>
+      <ol class="steps-list">
+        <li>מצא את הקובץ <strong>מערכת-ניהול-תקציב.html</strong> בתיקיה המשותפת</li>
+        <li>לחץ <strong>דאבל-קליק</strong> — הקובץ ייפתח בדפדפן (Chrome או Edge)</li>
+        <li>המערכת מוכנה לשימוש מיידי</li>
+      </ol>
+      <div class="alert alert-info" role="alert">
+        <i class="far fa-lightbulb alert-icon" aria-hidden="true"></i>
+        <div><strong>טיפ:</strong> צור קיצור דרך על שולחן העבודה. קליק ימני > "שלח אל" > "שולחן עבודה (יצירת קיצור דרך)".</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><h3 class="card-title"><i class="far fa-map" aria-hidden="true"></i>מבנה המערכת — 7 לשוניות</h3></div>
+      <div class="table-responsive">
+        <table class="data-table" aria-label="מבנה לשוניות">
+          <thead><tr><th>לשונית</th><th>מה תמצא שם</th><th>מתי תשתמש</th></tr></thead>
+          <tbody>
+            <tr><td><strong>ראשי</strong></td><td>דאשבורד, תזכורות, קיצורים, טפסים</td><td>נקודת הכניסה היומית</td></tr>
+            <tr><td><strong>מרצים</strong></td><td>מחשבון נש"מ + טבלת תעריפים + כללים</td><td>הזמנת מרצה / בדיקת עלות</td></tr>
+            <tr><td><strong>הסעות</strong></td><td>מחשבון הסעה + מחירון + כללי חישוב</td><td>הזמנת הסעה / אימות חשבונית</td></tr>
+            <tr><td><strong>סעיפים</strong></td><td>כל סעיפי התקציב + תעריפי ת"צ</td><td>בדיקת סעיף / דרישת תשלום</td></tr>
+            <tr><td><strong>נהלים</strong></td><td>תהליכי עבודה שלב-אחר-שלב</td><td>הזמנת רכש / סיור / ספק מסרב</td></tr>
+            <tr><td><strong>ספקים</strong></td><td>פרטי 5 הספקים + טלפונים + סלים</td><td>יצירת קשר / בירור הזמנה</td></tr>
+            <tr><td><strong>עזרה</strong></td><td>חוברת הסבר זו + שאלות נפוצות</td><td>כשאתה לא בטוח איך להשתמש</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><h3 class="card-title"><i class="far fa-calculator" aria-hidden="true"></i>איך משתמשים במחשבון נש"מ (מרצים)</h3></div>
+      <ol class="steps-list">
+        <li>עבור ללשונית <strong>"מרצים"</strong></li>
+        <li>בחר <strong>קבוצת מרצה</strong> — לפי תואר/דרגה (1=בכיר חיצוני, 6=מדריך בלתי מוסמך)</li>
+        <li>הזן <strong>שעות הרצאה</strong> (שעה וחצי ברצף = נחשב 2 שעות)</li>
+        <li>הזן <strong>זמן הפסקה</strong> בדקות (פחות מ-15 דקות = רשום 0)</li>
+        <li>הזן <strong>ק"מ הלוך+חזור</strong> (אם פחות מ-30 ק"מ לכיוון אחד = רשום 0)</li>
+        <li>לחץ <strong>"חשב עלות"</strong> — התוצאה תופיע מיידית</li>
+      </ol>
+      <div class="alert alert-warning" role="alert">
+        <i class="far fa-exclamation-triangle alert-icon" aria-hidden="true"></i>
+        <div><strong>שים לב:</strong> המחשבון מחשב את התעריף <strong>המקסימלי</strong>. הנסיעות מחושבות לפי <strong>טבלת מרחקים</strong> בלבד (לא גוגל). יש לצרף תוצאה + טופס בל/496 להצעת המחיר.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><h3 class="card-title"><i class="far fa-bus" aria-hidden="true"></i>איך משתמשים במחשבון הסעות</h3></div>
+      <ol class="steps-list">
+        <li>עבור ללשונית <strong>"הסעות"</strong></li>
+        <li>בחר <strong>ספק</strong> — לפי אזור נקודת המוצא של הנסיעה</li>
+        <li>בחר <strong>סוג רכב</strong> (אוטובוס / מיניבוס / מונית)</li>
+        <li>הזן <strong>שעות נסיעה</strong> (מינימום חיוב: 4 שעות!)</li>
+        <li>הזן <strong>מרחק בק"מ</strong></li>
+        <li>בחר <strong>צמודה או חד כיוונית</strong></li>
+        <li>לחץ <strong>"חשב עלות"</strong></li>
+      </ol>
+      <div class="alert alert-warning" role="alert">
+        <i class="far fa-exclamation-triangle alert-icon" aria-hidden="true"></i>
+        <div><strong>חשוב:</strong> בנסיעה חד כיוונית מתווספת עלות נסיעת חזור (מרחק÷50 = שעות חזור). בסלים 1,7,10 — תוספת 70% בלבד.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><h3 class="card-title"><i class="far fa-magnifying-glass" aria-hidden="true"></i>איך מחפשים סעיף תקציב</h3></div>
+      <ol class="steps-list">
+        <li>עבור ללשונית <strong>"סעיפים"</strong></li>
+        <li>הקלד בתיבת החיפוש מילת מפתח</li>
+        <li>הטבלה מסננת אוטומטית</li>
+      </ol>
+      <div class="table-responsive">
+        <table class="data-table" aria-label="דוגמאות חיפוש">
+          <thead><tr><th>אני רוצה...</th><th>חפש:</th><th>תמצא:</th></tr></thead>
+          <tbody>
+            <tr><td>להחזיר נסיעות למתנדב</td><td><strong>נסיעה</strong></td><td>סעיף 1192178 (4 דרישות)</td></tr>
+            <tr><td>להזמין כיבוד להדרכה</td><td><strong>כיבוד</strong></td><td>סעיף 1107200 דרישה 02</td></tr>
+            <tr><td>לשלם למרצה</td><td><strong>מרצים</strong></td><td>סעיף 1192038 דרישה 02</td></tr>
+            <tr><td>להזמין הסעה</td><td><strong>הסעות</strong></td><td>סעיף 1107200 דרישה 01</td></tr>
+            <tr><td>שי לחג למתנדבים</td><td><strong>תגמולים</strong></td><td>סעיף 1192004 דרישה 02</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><h3 class="card-title"><i class="far fa-comments" aria-hidden="true"></i>שאלות נפוצות</h3></div>
+      <div class="accordion">
+        <div class="accordion-item"><button class="accordion-header" aria-expanded="false"><span>המערכת לא נפתחת / נראית לא תקינה?</span><i class="far fa-chevron-down chevron" aria-hidden="true"></i></button><div class="accordion-content"><p>ודא שאתה פותח ב-<strong>Chrome</strong> או <strong>Edge</strong>. קליק ימני על הקובץ > "פתח באמצעות" > בחר Chrome.</p></div></div>
+        <div class="accordion-item"><button class="accordion-header" aria-expanded="false"><span>האם המערכת דורשת אינטרנט?</span><i class="far fa-chevron-down chevron" aria-hidden="true"></i></button><div class="accordion-content"><p>לא. הקובץ עצמאי לחלוטין. רק בפתיחה ראשונה נטען פונט (Rubik). אם אין אינטרנט — הפונט יהיה Arial והכל עובד.</p></div></div>
+        <div class="accordion-item"><button class="accordion-header" aria-expanded="false"><span>מי מעדכן את התעריפים?</span><i class="far fa-chevron-down chevron" aria-hidden="true"></i></button><div class="accordion-content"><p>המטה. כשיש שינוי (עדכון מדד/תעריפים) — יופץ קובץ מעודכן.</p></div></div>
+        <div class="accordion-item"><button class="accordion-header" aria-expanded="false"><span>חישבתי עלות מרצה. מה עכשיו?</span><i class="far fa-chevron-down chevron" aria-hidden="true"></i></button><div class="accordion-content"><p>1. ודא תקציב בסעיף 1192038 דרישה 02<br>2. מלא טופס <strong>בל/496</strong> + צרף תוצאת מחשבון<br>3. קבל הצעת מחיר מהמרצה<br>4. שלח הזמנת רכש למנהל תחום כספים</p></div></div>
+        <div class="accordion-item"><button class="accordion-header" aria-expanded="false"><span>ספק ההסעות מסרב — מה עושים?</span><i class="far fa-chevron-down chevron" aria-hidden="true"></i></button><div class="accordion-content"><p>עבור ללשונית <strong>"נהלים"</strong> — שם מפורט התהליך:<br>1. בקשו אישור בכתב מהספק<br>2. העבירו לאחראית תקציבים באגף<br>3. האגף יפנה לתחום תחבורה<br>4. קבלת אישור להזמנה שלא מן המכרז</p></div></div>
+        <div class="accordion-item"><button class="accordion-header" aria-expanded="false"><span>האם אני יכול להדפיס?</span><i class="far fa-chevron-down chevron" aria-hidden="true"></i></button><div class="accordion-content"><p>כן! <strong>Ctrl+P</strong> מכל לשונית. מומלץ במיוחד להדפיס את טבלת הספקים ולתלות ליד שולחן העבודה.</p></div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><h3 class="card-title"><i class="far fa-bookmark" aria-hidden="true"></i>כרטיס עזר מהיר</h3></div>
+      <div class="calc-grid">
+        <div>
+          <h3 style="font-size:0.9rem; font-weight:600; color:var(--color-primary-700); margin-bottom:8px;">תעריפי מרצים (מקסימום)</h3>
+          <div class="table-responsive">
+            <table class="data-table" aria-label="תעריפי מרצים">
+              <thead><tr><th>קבוצה</th><th>תעריף</th></tr></thead>
+              <tbody>
+                <tr><td>1 — בכיר חיצוני</td><td><strong>324 ₪</strong></td></tr>
+                <tr><td>2 — אקדמי</td><td><strong>222 ₪</strong></td></tr>
+                <tr><td>3 — תואר שני</td><td><strong>126 ₪</strong></td></tr>
+                <tr><td>4 — תואר ראשון</td><td><strong>86 ₪</strong></td></tr>
+                <tr><td>5 — מדריך מוסמך</td><td><strong>69 ₪</strong></td></tr>
+                <tr><td>6 — לא מוסמך</td><td><strong>62 ₪</strong></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div>
+          <h3 style="font-size:0.9rem; font-weight:600; color:var(--color-primary-700); margin-bottom:8px;">נוסחאות חישוב</h3>
+          <div class="table-responsive">
+            <table class="data-table" aria-label="נוסחאות">
+              <thead><tr><th>רכיב</th><th>נוסחה</th></tr></thead>
+              <tbody>
+                <tr><td>הכנה</td><td>1/3 שעה לכל שעת הדרכה</td></tr>
+                <tr><td>הפסקה</td><td>תעריף × 25% × זמן</td></tr>
+                <tr><td>נסיעות</td><td>ק"מ (ה'+ח') × 1.4₪</td></tr>
+                <tr><td>ביטול זמן</td><td>ק"מ/50 × תעריף × 40%</td></tr>
+                <tr><td>מע"מ</td><td>סה"כ × 1.17</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div>
+          <h3 style="font-size:0.9rem; font-weight:600; color:var(--color-primary-700); margin-bottom:8px;">תקרות תשלום</h3>
+          <div class="table-responsive">
+            <table class="data-table" aria-label="תקרות">
+              <thead><tr><th>נושא</th><th>תקרה</th></tr></thead>
+              <tbody>
+                <tr><td>החזר ת"צ/חודש</td><td><strong>250 ₪</strong></td></tr>
+                <tr><td>החזר רכב/חודש</td><td><strong>750 ₪</strong></td></tr>
+                <tr><td>תיחור מרצה</td><td><strong>מעל 5,000₪</strong></td></tr>
+                <tr><td>דמי רצינות</td><td><strong>20 ₪</strong></td></tr>
+                <tr><td>שי חג (תווים)</td><td><strong>300 ₪</strong></td></tr>
+                <tr><td>שי חולה</td><td><strong>עד 50 ₪</strong></td></tr>
+                <tr><td>יום עיון/משתתף</td><td><strong>250 ₪</strong></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="text-align:center; padding:24px; color:var(--color-text-secondary); font-size:0.8rem; border-top:1px solid var(--color-border-primary); margin-top:24px;">
+      <p>המוסד לביטוח לאומי | אגף ייעוץ לאזרח הוותיק ומשפחתו | מערכת ניהול תקציב v1.0 | יולי 2026</p>
+      <p>לשאלות ותמיכה — פנו לאחראית תקציבים באגף</p>
+    </div>
+  </div>
+
+</main>
+
+<script>
+// Date
+document.getElementById('currentDate').textContent = new Date().toLocaleDateString('he-IL', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
+
+// Tab switching
+function switchTab(tabId) {
+  document.querySelectorAll('.tab-btn').forEach(b => { b.classList.remove('active'); b.setAttribute('aria-selected','false'); });
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  const btn = document.querySelector(`[data-tab="${tabId}"]`);
+  if(btn) { btn.classList.add('active'); btn.setAttribute('aria-selected','true'); }
+  const panel = document.getElementById('panel-' + tabId);
+  if(panel) panel.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => switchTab(btn.dataset.tab));
+});
+
+// Accordion
+document.querySelectorAll('.accordion-header').forEach(header => {
+  header.addEventListener('click', () => {
+    const item = header.closest('.accordion-item');
+    const wasOpen = item.classList.contains('open');
+    item.classList.toggle('open');
+    header.setAttribute('aria-expanded', !wasOpen);
+  });
+});
+
+// NASHM Calculator
+function calcNashm() {
+  const rate = parseFloat(document.getElementById('lecturer-group').value);
+  const hours = parseFloat(document.getElementById('lecture-hours').value) || 0;
+  const breakMin = parseFloat(document.getElementById('break-time').value) || 0;
+  const km = parseFloat(document.getElementById('km-distance').value) || 0;
+
+  const lectureCost = rate * hours;
+  const prepHours = Math.floor(hours) / 3;
+  const prepCost = (rate / 3) * hours;
+  const breakCost = breakMin >= 15 ? (rate * 0.25 * (breakMin / 60)) : 0;
+  const travelCost = km > 0 ? km * 1.4 : 0;
+  const cancelTime = km > 0 ? (km / 50) * rate * 0.4 : 0;
+
+  const total = lectureCost + prepCost + breakCost + travelCost + cancelTime;
+  const withVat = total * 1.17;
+
+  document.getElementById('nashm-result').style.display = 'block';
+  document.getElementById('nashm-total').textContent = total.toFixed(0) + ' ₪';
+  document.getElementById('nashm-breakdown').textContent =
+    `הרצאה: ${lectureCost.toFixed(0)}₪ | הכנה: ${prepCost.toFixed(0)}₪ | הפסקה: ${breakCost.toFixed(0)}₪ | נסיעות: ${travelCost.toFixed(0)}₪ | ביטול זמן: ${cancelTime.toFixed(0)}₪`;
+  document.getElementById('nashm-with-vat').textContent = `כולל מע"מ (17%): ${withVat.toFixed(0)} ₪`;
+}
+
+// Transport Calculator
+function calcTransport() {
+  const hours = parseFloat(document.getElementById('travel-hours').value) || 4;
+  const km = parseFloat(document.getElementById('travel-km').value) || 0;
+  const tripType = document.getElementById('is-round-trip').value;
+  const vehicle = document.getElementById('vehicle-type').value;
+
+  let hourRate, kmRate;
+  switch(vehicle) {
+    case 'bus': hourRate = 167; kmRate = 3.57; break;
+    case 'busLux': hourRate = 178; kmRate = 3.39; break;
+    case 'mini': hourRate = 108; kmRate = 1.76; break;
+    case 'taxi': hourRate = 1.98; kmRate = 1.98; break;
+    case 'taxiAccess': hourRate = 2.26; kmRate = 2.26; break;
+    default: hourRate = 167; kmRate = 3.57;
+  }
+
+  let effectiveHours = Math.max(hours, 4);
+  let effectiveKm = km;
+  let returnNote = '';
+
+  if (tripType === 'one' && vehicle !== 'taxi' && vehicle !== 'taxiAccess') {
+    const returnKm = km;
+    const returnTime = km / 50;
+    effectiveKm += returnKm;
+    effectiveHours = Math.max(hours + returnTime, 4);
+    returnNote = ` (כולל חזור: +${returnKm}ק"מ, +${returnTime.toFixed(1)}שע')`;
+  }
+
+  let total;
+  if (vehicle === 'taxi' || vehicle === 'taxiAccess') {
+    const startup = vehicle === 'taxi' ? 3.03 : 17.4;
+    total = startup + (hourRate * hours * 60) + (kmRate * km);
+    if (tripType === 'one' && km > 15) {
+      const returnCost = (hourRate * (km/50) * 60) + (kmRate * km);
+      total += returnCost;
+      returnNote = ' (כולל תוספת חזור מעל 15 ק"מ)';
+    }
+  } else {
+    total = (hourRate * effectiveHours) + (kmRate * effectiveKm);
+  }
+
+  const totalVat = total * 1.17;
+
+  document.getElementById('transport-result').style.display = 'block';
+  document.getElementById('transport-total').textContent = totalVat.toFixed(0) + ' ₪';
+  document.getElementById('transport-breakdown').textContent =
+    `שעות: ${effectiveHours.toFixed(1)} | ק"מ: ${Math.ceil(effectiveKm)} | ללא מע"מ: ${total.toFixed(0)}₪${returnNote}`;
+}
+
+// Budget search
+function filterBudget() {
+  const q = document.getElementById('budget-search').value.toLowerCase();
+  document.querySelectorAll('.budget-table tbody tr').forEach(row => {
+    row.style.display = row.textContent.toLowerCase().includes(q) ? '' : 'none';
+  });
+}
+</script>
+</body>
+</html>
